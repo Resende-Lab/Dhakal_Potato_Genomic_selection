@@ -6,9 +6,6 @@
 #SBATCH --mem=10GB
 #SBATCH --time=96:00:00
 #SBATCH --mail-type=END
-#SBATCH --mail-user=<your-email>
-#SBATCH --account=<your-account>
-#SBATCH --qos=<your-qos>
 #SBATCH --output=logs/sim_%a_%A.out
 #SBATCH --error=logs/sim_%a_%A.err
 #SBATCH --array=1-30
