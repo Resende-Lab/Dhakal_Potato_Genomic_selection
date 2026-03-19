@@ -1,0 +1,26 @@
+# R
+.Rhistory
+.Rdata
+.RData
+.Rproj.user
+*.Rproj
+
+# Data files (until cleared for sharing)
+*.rds
+*.RDS
+*.csv
+*.xlsx
+
+# OS
+.DS_Store
+Thumbs.db
+
+# HPC / SLURM
+slurm-*.out
+*.err
+*.log
+*.tmp
+
+# Misc
+__pycache__/
+.ipynb_checkpoints/
