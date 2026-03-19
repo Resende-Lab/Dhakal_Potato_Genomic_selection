@@ -9,7 +9,7 @@ Genomic selection (GS) pipeline for potato breeding: within- and across-environm
 ```
 Potato_GS_pipeline/
 │
-├── data/                            # Placeholder (data may be added after PI approval)
+├── data/                            # Placeholder (to be added)
 │
 ├── codes/
 │   ├── CV1_within_env/              # Section 3.2 — Within-environment prediction
@@ -54,12 +54,11 @@ Potato_GS_pipeline/
 Predicts **unobserved genotypes** within environments where other genotypes have been phenotyped.
 
 - **Script**: `codes/CV1_within_env/GS_CV1_GBLUP.R`
-- **Model**: GBLUP via RKHS kernel (`BGLR`)
+- **Model**: GBLUP (`BGLR`)
 - **G matrix**: VanRaden for autotetraploids (`AGHmatrix`, ploidy = 4)
-- **Markers**: ~4K DArT SNPs (dosage)
 - **CV**: 5-fold, 10 repetitions per environment × trait
 - **Traits**: Total yield, marketable yield, specific gravity
-- **Environments**: BG_2023, FL_M1_2024, TRS_2024, BG_2024
+- **Environments**: FL_2023, FL_M2_2024, TRS_2023, BG_2023, FL_M1_2024, TRS_2024, BG_2024
 - **Phenotypes**: BLUEs scaled within environment (zero mean, unit variance)
 
 ### 2. CV0 — Across-Environment Prediction (Section 3.3)
@@ -83,7 +82,7 @@ Predicts genotype performance in **entirely unobserved environments** using leav
 
 Compares prediction accuracy across genotyping platforms and marker densities.
 
-- **Script**: `codes/platform_comparison/GS_CV1_DArT_4K.R` — CV1 with DArT 4K markers
+- **Script**: `codes/platform_comparison/GS_CV1_DArT_4K.R` — CV1 with 4K markers and Cv1 with imputed set of markers
 - Additional scripts for Flex-seq 4K vs 105K and imputation to be added.
 
 ### 4. Breeding Program Simulation (Section 3.5)
@@ -123,31 +122,7 @@ Stochastic simulation of a potato breeding pipeline comparing conventional pheno
 - R packages: `BGLR`, `AGHmatrix`, `AlphaSimR`, `dplyr`, `readxl`, `ggplot2`, `ggpubr`, `data.table`, `plyr`
 - HPC with SLURM (scripts written for UF HiPerGator; edit SLURM headers before use)
 
-## Usage
-
-```bash
-# Clone the repo
-git clone https://github.com/<your-username>/Potato_GS_pipeline.git
-cd Potato_GS_pipeline
-
-# --- CV1 ---
-cd codes/CV1_within_env
-# Place input data files here, then:
-sbatch ../../codes/SLURM/run_CV1.sbatch
-
-# --- CV0 ---
-cd codes/CV0_across_env
-sbatch ../../codes/SLURM/run_CV0.sbatch
-
-# --- Simulation ---
-cd codes/simulation
-mkdir -p outMod logs
-sbatch ../../codes/SLURM/run_simulation.sbatch
-# After all jobs complete:
-Rscript plot_results.R
-```
-
-## Input Data (not included)
+## Input Data (to be included)
 
 | File | Used by | Description |
 |------|---------|-------------|
