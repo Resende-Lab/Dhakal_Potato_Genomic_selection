@@ -39,13 +39,23 @@ if (nSnp > 0) {
 }
 
 SP$addTraitADG(nQtl,
-               mean   = mean,
-               var    = var,
-               meanDD = ddMean,
-               varDD  = ddVar,
-               varGxE = varGE,
-               varEnv = 0)$
-  setVarE(varE = varE)
+               mean   = mean[1],
+               var    = var[1],
+               meanDD = ddMean[1],
+               varDD  = ddVar[1],
+               varGxE = varGE[1],
+               varEnv = 0)
+
+
+SP$addTraitADG(nQtl,
+               mean   = mean[2],
+               var    = var[2],
+               meanDD = ddMean[2],
+               varDD  = ddVar[2],
+               varGxE = varGE[2],
+               varEnv = 0)
+
+SP$setVarE(varE = varE)
 
 # ── 4. Create breeding population & initial parents ─────────────────────────
 
