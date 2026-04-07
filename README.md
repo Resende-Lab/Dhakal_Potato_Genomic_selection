@@ -9,7 +9,7 @@ Genomic selection (GS) pipeline for potato breeding: within- and across-environm
 ```
 Potato_GS_pipeline/
 │
-├── data/                            # Placeholder (to be added)
+├── data/                            # to be added
 │
 ├── codes/
 │   ├── CV1_within_env/              # Section 3.2 — Within-environment prediction
