@@ -108,11 +108,11 @@ Stochastic simulation of a potato breeding pipeline comparing conventional pheno
 | Scenario | Description |
 |----------|-------------|
 | Conventional | Standard phenotypic selection at all stages |
-| Strategy 1 | Genotype 650 seedlings, higher H2 at 2nd clonal |
-| Strategy 2 | Genotype 1,600 seedlings, higher H2 at 2nd clonal |
-| Strategy 3 | Genotype all F1s, skip seedling stage |
+| Strategy 1 | Genotype 650 seedlings
+| Strategy 2 | Genotype 1,600 seedlings
+| Strategy 3 | Genotype all F1s
 
-**Design**: 200 tetraploid founders, 12 chromosomes, 300 QTL, 400 SNPs, 20-year burn-in + 30-year future, 30 replicates via SLURM array.
+**Design**: 200 tetraploid founders, 12 chromosomes, 300 QTL, 1000 SNPs, 20-year burn-in + 30-year future, 30 replicates via SLURM array.
 
 ---
 
@@ -120,7 +120,6 @@ Stochastic simulation of a potato breeding pipeline comparing conventional pheno
 
 - R (≥ 4.x)
 - R packages: `BGLR`, `AGHmatrix`, `AlphaSimR`, `dplyr`, `readxl`, `ggplot2`, `ggpubr`, `data.table`, `plyr`
-- HPC with SLURM (scripts written for UF HiPerGator; edit SLURM headers before use)
 
 ## Input Data (to be included)
 
@@ -133,8 +132,4 @@ Stochastic simulation of a potato breeding pipeline comparing conventional pheno
 
 ## Citation
 
-*TODO: Add citation / DOI once published.*
-
-## License
-
-*TODO: Choose license (e.g., MIT, GPL-3).*
+*TODO: citation / DOI once published.*
