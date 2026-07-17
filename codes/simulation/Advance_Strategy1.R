@@ -21,7 +21,7 @@ Second_Clonal_Sel <- selectInd(First_Clonal_Pheno, 60, use = "pheno",
                                trait = selIndex, b = weight, scale = TRUE)
 
 ###<---------------YEAR 2/3: Second clonal generation (seedling + GS)
-Field_seedling <- setPheno(Clones, h2 = c(0.02, 0.00001))
+Field_seedling <- setPheno(Clones, h2 = c(0.05, 0.00001))
 h2_seed[year,] <- diag(varG(Field_seedling)) / diag(varP(Field_seedling))
 Field_seedling_Sel <- selectInd(Field_seedling, 650, use = "pheno")
 
