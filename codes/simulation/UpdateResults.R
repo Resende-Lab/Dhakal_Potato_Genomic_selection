@@ -1,32 +1,57 @@
-##############################################################################
-# UpdateResults.R — Record metrics for each breeding cycle year
-##############################################################################
+# Measure the results from each cycle
 
-# ── Parent genetic mean & variance ──
-parentMean[year, ] <- meanG(Parents)
-parentVar[year, ]  <- diag(varG(Parents))
+#>>---- Parents
+parentMean[year,] = meanG(Parents)
+parentVar[year,] = diag(varG(Parents))
 
-# ── Released variety genetic mean ──
-varietyMean[year, ] <- meanG(Fouth_Clonal_Sel)
+#>>---- Released material
+varietyMean[year,] = meanG(Fouth_Clonal_Sel)
 
-# ── Heritability (narrow-sense proxy) ──
-heritab[year, ] <- diag(varG(Parents)) / diag(varP(Parents))
+#>>---- Heritability
+heritab[year,] <- diag(varG(Parents))/diag(varP(Parents))
+Accuracy[year,] <- diag(cor(Parents@gv, Parents@pheno))
 
-# ── Inbreeding rate (heterozygosity-based, Falconer & Mackay 1996) ──
-inbr_rate <- function(W) {
-  het <- 1 - abs(W - 1)
-  fi  <- rowSums(het) / ncol(W)
-  return(1 - fi)
+#>>---- Inbreeding 
+
+
+#' Calculates the inbreeding rates of a target population
+#' 
+#' @description 
+#' The function implements the estimation for inbreeding rates based on the 
+#' proposition of Falconer and Mackey (1996). The amount of heterozygous is 
+#' measured as a proxy for the inbreeding rate for a target population.
+#' 
+#' @param W Marker matrix with the SNPs coded as 0,1,2.
+#' 
+#' @return Inbreeding rate for a target population
+#'
+#' @export
+
+inbr_rate <- function(W){
+  het=1-abs(W-1)
+  fi=rowSums(het)/(ncol(W))
+  inbreeding=1-fi
+  return(inbreeding)
 }
 
-MarkersA <- pullSnpGeno(Parents)
-Inbreeding[year] <- mean(inbr_rate(MarkersA))
 
-# ── Inbreeding coefficient (allele-frequency-based) ──
-inbCoef <- function(Pop) {
-  Markers <- pullSnpGeno(Pop)
-  p <- colMeans(Markers) / 2
-  return(sum(p^2) / ncol(Markers))
+MarkersA = pullSnpGeno(Parents)
+Inbreeding[year] = mean(inbr_rate(MarkersA))
+
+
+
+#####>>>>----- 2. Based on Falconer equation
+
+# Inbreeding falconer
+inbCoef = function(Pop){
+  
+  Markers = pullSnpGeno(Pop)
+  p = colMeans(Markers)/2
+  
+  f = sum(p^2)/ncol(Markers)
+  
+  return(f)
 }
 
-IbdDeltaF[year] <- inbCoef(Parents)
+IbdDeltaF[year] = inbCoef(Parents)
+
