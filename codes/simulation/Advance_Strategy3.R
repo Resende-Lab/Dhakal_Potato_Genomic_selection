@@ -1,30 +1,45 @@
 ##############################################################################
 # Advance_Strategy3.R — Genotype all F1 individuals
 #
-# Most aggressive GS strategy: all F1 clones are phenotyped at higher H2,
+# Most aggressive GS strategy
 # skipping the seedling field stage entirely. Selection goes directly from
 # F1 evaluation to clonal trials.
 ##############################################################################
 
-# ── Year 6: Official trials 2 (30 reps → select 3) ──
-Fouth_Clonal     <- setPheno(Third_Clonal_Sel, reps = 30, varE = varE)
+####<---------------YEAR 6: Official trials 2
+Fouth_Clonal <- setPheno(Third_Clonal_Sel, reps = 30, varE = varE)
+h2_OT2[year,] <- diag(varG(Fouth_Clonal)) / diag(varP(Fouth_Clonal))
 Fouth_Clonal_Sel <- selectInd(Fouth_Clonal, 3, use = "pheno",
                               trait = selIndex, b = weight, scale = TRUE)
+Third_Clonal_Pheno = Fouth_Clonal
 
-# ── Year 5: Official trials 1 (15 reps → select 20) ──
-Third_Clonal     <- setPheno(Second_Clonal_Sel, reps = 15, varE = varE)
+####<---------------YEAR 5: Official trials 1
+Third_Clonal <- setPheno(Second_Clonal_Sel, reps = 15, varE = varE)
+h2_OT1[year,] <- diag(varG(Third_Clonal)) / diag(varP(Third_Clonal))
 Third_Clonal_Sel <- selectInd(Third_Clonal, 20, use = "pheno",
                               trait = selIndex, b = weight, scale = TRUE)
+Second_Clonal_Pheno = Third_Clonal
 
-# ── Year 3: Evaluate all F1 clones at higher H2 (select 200) ──
-Clones1          <- setPheno(Clones, H2 = c(0.3, 0.5))
-First_Clonal_Sel <- selectInd(Clones1, 200, use = "pheno",
+####<---------------YEAR 2/3/4: Genotype ALL F1s + GS
+Clones@ebv = setEBV_mtm(Target = Clones, Training = trainPop, Dominance = FALSE,
+                        ploidy = Clones@ploidy, tarTraits = 1)
+Clones@ebv = cbind(Clones@ebv,
+                   setEBV_mtm(Target = Clones, Training = trainPop, Dominance = FALSE,
+                              ploidy = Clones@ploidy, tarTraits = 2))
+
+# Snapshot the genotyped candidates (GV + EBV) before Clones is re-crossed below,
+# so UpdateResults_GS_SC5.R can measure F1 accuracy on the correct population.
+Clones_GS <- Clones
+
+First_Clonal_Sel <- selectInd(Clones,  200, use = "ebv",
                               trait = selIndex, b = weight, scale = TRUE)
 
-# ── Year 4: Third clonal generation (6 reps → select 60) ──
-Second_Clonal     <- setPheno(First_Clonal_Sel, reps = 6, varE = varE)
+# Third clonal generation
+Second_Clonal <- setPheno(First_Clonal_Sel, reps = 6, varE = varE)
+h2_2C[year,] <- diag(varG(Second_Clonal)) / diag(varP(Second_Clonal))
 Second_Clonal_Sel <- selectInd(Second_Clonal, 60, use = "pheno",
                                trait = selIndex, b = weight, scale = TRUE)
+First_Clonal_Pheno = Second_Clonal
 
-# ── Year 1: Crossing ──
-Clones <- randCross(Parents, nCrosses = 80, nProgeny = 200)
+####<----------------YEAR 1: Cross
+Clones <- randCross(Parents, nCrosses= 80, nProgeny = 200)
