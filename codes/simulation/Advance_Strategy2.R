@@ -1,33 +1,55 @@
 ##############################################################################
 # Advance_Strategy2.R — Genotype 1,600 seedlings
-#
-# Increased genotyping capacity: 1,600 seedlings phenotyped at seedling
-# stage, then evaluated at higher H2 in second clonal stage.
 ##############################################################################
 
-# ── Year 6: Official trials 2 (30 reps → select 3) ──
-Fouth_Clonal     <- setPheno(Third_Clonal_Sel, reps = 30, varE = varE)
+####<---------------YEAR 6: Official trials 2
+Fouth_Clonal <- setPheno(Third_Clonal_Sel, reps = 30, varE = varE)
+h2_OT2[year,] <- diag(varG(Fouth_Clonal)) / diag(varP(Fouth_Clonal))
 Fouth_Clonal_Sel <- selectInd(Fouth_Clonal, 3, use = "pheno",
                               trait = selIndex, b = weight, scale = TRUE)
+Third_Clonal_Pheno = Fouth_Clonal
 
-# ── Year 5: Official trials 1 (15 reps → select 20) ──
-Third_Clonal     <- setPheno(Second_Clonal_Sel, reps = 15, varE = varE)
+####<---------------YEAR 5: Official trials 1
+Third_Clonal <- setPheno(Second_Clonal_Sel, reps = 15, varE = varE)
+h2_OT1[year,] <- diag(varG(Third_Clonal)) / diag(varP(Third_Clonal))
 Third_Clonal_Sel <- selectInd(Third_Clonal, 20, use = "pheno",
                               trait = selIndex, b = weight, scale = TRUE)
+Second_Clonal_Pheno = Third_Clonal
 
-# ── Year 4: Third clonal generation (6 reps → select 60) ──
-Second_Clonal     <- setPheno(First_Clonal_Sel, reps = 6, varE = varE)
+####<---------------YEAR 4: Third clonal generation
+Second_Clonal <- setPheno(First_Clonal_Sel, reps = 6, varE = varE)
+h2_2C[year,] <- diag(varG(Second_Clonal)) / diag(varP(Second_Clonal))
 Second_Clonal_Sel <- selectInd(Second_Clonal, 60, use = "pheno",
                                trait = selIndex, b = weight, scale = TRUE)
 
-# ── Year 2: Seedling field (select 1,600 phenotypically) ──
-Field_seedling     <- setPheno(Clones, h2 = c(0.05, 0))
-Field_seedling_Sel <- selectInd(Field_seedling, 1600, use = "pheno")
+First_Clonal_Pheno = Second_Clonal
 
-# ── Year 2: Second clonal with higher H2 (2 reps → select 200) ──
-First_Clonal     <- setPheno(Field_seedling_Sel, H2 = c(0.3, 0.5), reps = 2)
-First_Clonal_Sel <- selectInd(First_Clonal, 200, use = "pheno",
-                              trait = selIndex, b = weight, scale = TRUE)
+####<---------------YEAR 2/3: First Clonal (seedling + GS)
+Field_seedling <- setPheno(Clones, h2 = c(0.05, 0.00001))
+h2_seed[year,] <- diag(varG(Field_seedling)) / diag(varP(Field_seedling))
+Field_seedling_Sel <- selectInd(Field_seedling, 1600 , use = "pheno")
 
-# ── Year 1: Crossing ──
-Clones <- randCross(Parents, nCrosses = 80, nProgeny = 200)
+# Both traits additive -> single additive multi-trait EBV (2-column: yield, SG)
+# Field_seedling_Sel@ebv = setEBV_mtm(Target = Field_seedling_Sel,
+#                                     Training = trainPop,
+#                                     Dominance = FALSE,
+#                                     ploidy = Field_seedling_Sel@ploidy,
+#                                     tarTraits = NULL)
+
+Field_seedling_Sel@ebv = setEBV_mtm(Target = Field_seedling_Sel,
+                                    Training = trainPop,
+                                    Dominance = FALSE,
+                                    ploidy = Field_seedling_Sel@ploidy,
+                                    tarTraits = 1)
+Field_seedling_Sel@ebv = cbind(Field_seedling_Sel@ebv,
+                               setEBV_mtm(Target = Field_seedling_Sel,
+                                          Training = trainPop,
+                                          Dominance = FALSE,
+                                          ploidy = Field_seedling_Sel@ploidy,
+                                          tarTraits = 2))
+
+First_Clonal_Sel <- selectInd(Field_seedling_Sel, 200, use = "ebv",
+                              trait = selIndex, b = weight, scale = TRUE) #*** Parents from here plus higher h2
+
+####<----------------YEAR 1: Cross
+Clones <- randCross(Parents, nCrosses= 80, nProgeny = 200)
